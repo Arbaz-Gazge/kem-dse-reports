@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEM DSE Reports + IPD</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:600,400&display=swap" />
+  <style>
+    :root {
+      --color1: #277bce;
+      --color2: #e3f0fd;
+      --color3: #b3cee9;
+      --color4: #ffffff;
+      --color5: #f5faff;
+      --primary: var(--color1);
+      --secondary: var(--color3);
+      --surface: var(--color5);
+      --card: var(--color4);
+      --accent: var(--color1);
+      --on-primary: #fff;
+      --on-surface: #233858;
+      --on-card: #1d3663;
+      --danger: #d6334f;
+      --success: #277bce;
+    }
+
+    body {
+      background: linear-gradient(120deg, var(--color5), var(--color2));
+      margin: 0;
+      min-height: 100vh;
+      color: var(--on-surface);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--color4);
+      color: var(--on-surface);
+      border-radius: 24px;
+      box-shadow: 0 2px 24px #aacced22;
+      min-height: 100vh;
+      overflow-x: hidden;
+      animation: fadein 0.7s;
+    }
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 2em;
+      letter-spacing: 1.2px;
+      margin: 24px 0 10px 0;
+      text-shadow: 0 1px 12px var(--color2);
+    }
+
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tabs button {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--primary);
+      font-size: 1.07em;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 9px 9px 0 0;
+      transition: color .17s, border-bottom .17s, background .11s;
+    }
+
+    .nav-tabs button:active,
+    .nav-tabs button:focus,
+    .nav-tabs button:hover {
+      background: var(--color2) !important;
+      color: var(--primary) !important;
+      border-bottom: 2.5px solid var(--primary);
+      outline: none;
+    }
+
+    .nav-tabs .active {
+      color: var(--primary);
+      border-bottom: 2.5px solid var(--primary);
+      background: var(--color5);
+      font-weight: 700;
+    }
+
+    .form-wrap {
+      padding: 0 18px;
+      width: 100%;
+      max-width: 570px;
+      margin: auto;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    label {
+      font-size: 1em;
+      font-weight: 600;
+      color: var(--primary);
+      margin-left: 2px;
+      margin-bottom: 2px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border-radius: 11px;
+      border: 1.5px solid var(--color2);
+      background: var(--color4) !important;
+      color: var(--primary) !important;
+      padding: 13px 11px;
+      font-size: 1.08em;
+      font-family: inherit;
+      margin-bottom: 4px;
+      box-sizing: border-box;
+      transition: border 0.18s, box-shadow 0.21s, background 0.14s;
+    }
+
+    textarea {
+      min-height: 58px;
+      resize: vertical;
+    }
+
+    /* input:focus,
+    select:focus,
+    textarea:focus {
+      border: 1.8px solid var(--primary) !important;
+      background: var(--color2) !important;
+      color: var(--primary) !important;
+      box-shadow: 0 2px 10px var(--color2)44;
+      outline: none;
+    } */
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #2562e4;
+      /* bright blue border */
+      background-color: #e3f0fd;
+      /* light blue background */
+      box-shadow: 0 0 10px rgba(37, 98, 228, 0.4);
+      /* subtle glowing shadow */
+      outline: none;
+      transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:focus,
+    textarea:-webkit-autofill:active,
+    select:-webkit-autofill,
+    select:-webkit-autofill:focus,
+    select:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px var(--color4) inset !important;
+      box-shadow: 0 0 0 1000px var(--color4) inset !important;
+      background-color: var(--color4) !important;
+      border: 1.7px solid var(--primary) !important;
+      color: var(--primary) !important;
+      -webkit-text-fill-color: var(--primary) !important;
+      transition: background-color 9999s ease-in-out 0s;
+    }
+
+    .date-wrapper {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .calendar-anchor {
+      display: none;
+      position: absolute;
+      top: 52px;
+      left: 0;
+      z-index: 100;
+      width: 100%;
+    }
+
+    .calendar-box {
+      box-shadow: 0 7px 34px var(--color2);
+      background: var(--color4);
+      padding: 18px 15px;
+      border-radius: 18px;
+      min-width: 230px;
+      animation: popupScale .25s;
+      color: var(--primary);
+    }
+
+    @keyframes popupScale {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .calendar-btn {
+      background: none;
+      border: none;
+      font-size: 1.46em;
+      color: var(--primary);
+      cursor: pointer;
+      border-radius: 7px;
+      transition: background .12s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .calendar-btn:active {
+      background: var(--color2);
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .calendar-day-label,
+    .calendar-day {
+      text-align: center;
+      font-size: 1.04em;
+      font-weight: 700;
+      margin: 2px 0;
+      color: var(--color3);
+    }
+
+    .calendar-day-label {
+      color: var(--primary);
+      opacity: 0.6;
+    }
+
+    .calendar-day {
+      color: var(--primary);
+      background: none;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.14s, color 0.14s;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      font-family: inherit;
+    }
+
+    .calendar-day:not([disabled]):hover,
+    .calendar-day.selected {
+      background: linear-gradient(90deg, var(--color2), var(--primary) 70%);
+      color: #fff !important;
+      font-weight: 700;
+    }
+
+    .calendar-day[disabled] {
+      opacity: 0.34;
+      color: #bbb !important;
+      pointer-events: none;
+    }
+
+    .calendar-today {
+      border: 1.5px solid var(--primary);
+      background: var(--color2);
+    }
+
+    .submit-btn {
+      font-size: 1.09em;
+      font-weight: 700;
+      background: var(--primary);
+      color: #fff;
+      padding: 13px 0;
+      border: none;
+      border-radius: 32px;
+      margin: 12px 0 18px;
+      box-shadow: 0 3px 8px var(--color2)44;
+      cursor: pointer;
+      letter-spacing: .11em;
+      transition: background 0.18s, transform 0.18s;
+    }
+
+    .submit-btn:active {
+      background: var(--color3);
+      transform: scale(0.98);
+    }
+
+    .searchbar {
+      padding: 0 18px;
+      margin-bottom: 10px;
+    }
+
+    .searchbar input {
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 1em;
+      border: 1.2px solid var(--color2);
+      background: var(--color2);
+      color: var(--primary);
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      margin: 11px 0;
+      padding-left: 18px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--color2);
+      color: var(--primary);
+      border: none;
+      border-radius: 13px;
+      padding: 8px 18px;
+      font-weight: 700;
+      font-size: 1.01em;
+      cursor: pointer;
+      transition: background .15s, color .15s, transform .14s;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--color4);
+      box-shadow: 0 1px 14px var(--color2);
+    }
+
+    .filter-btn:active {
+      transform: scale(0.97);
+    }
+
+    .section-title {
+      margin: 18px 0 7px 18px;
+      color: var(--primary);
+      font-size: 1.15em;
+      font-weight: 800;
+    }
+
+    .reports-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 18px 18px 18px;
+    }
+
+    .report-card {
+      background: var(--card);
+      border-radius: 15px;
+      box-shadow: 0 1px 9px var(--color2);
+      padding: 13px 14px 10px 14px;
+      border: 1.5px solid var(--color2);
+      font-size: 1.04em;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      opacity: 0;
+      transform: translateY(25px);
+      animation: cardfade 0.44s cubic-bezier(.68, -0.6, .32, 1.6) forwards;
+      color: var(--on-card);
+    }
+
+    @keyframes cardfade {
+      from {
+        opacity: 0;
+        transform: translateY(26px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .card-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2px;
+    }
+
+    .card-label {
+      color: var(--color3);
+      min-width: 40%;
+      font-weight: 700;
+      font-size: .97em;
+    }
+
+    .card-content {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .badge-select,
+    .badge {
+      font-size: 1.01em;
+      border-radius: 9px;
+      border: 1.5px solid var(--color2);
+      padding: 5px 13px 5px 9px;
+      margin-left: 2px;
+      background: var(--color2);
+    }
+
+    .badge.pending {
+      background-color: #f7c948;
+      /* example: yellow/orange */
+      color: #000000;
+      /* dark brown */
+    }
+
+    .badge.solved {
+      background-color: #56e7c8;
+      /* example: soft red */
+      color: #000000;
+      /* dark red */
+    }
+
+    .badge-select:active,
+    .badge-select:focus {
+      color: var(--primary);
+      background: var(--color2);
+    }
+
+    .card-actions {
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    .delete-btn {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 27px;
+      height: 27px;
+      font-size: 17px;
+      box-shadow: 0 2px 5px #ed374c65;
+      cursor: pointer;
+    }
+
+    .delete-btn:active {
+      background: #a02532;
+      transform: scale(0.92);
+    }
+
+    .fadeout {
+      animation: fadeoutcard 0.5s forwards;
+    }
+
+    @keyframes fadeoutcard {
+      to {
+        opacity: 0;
+        transform: translateX(110vw);
+      }
+    }
+
+    #adminPanel {
+      padding: 0 18px 15px;
+    }
+
+    .admin-reports-list .report-card {
+      margin-bottom: 10px;
+    }
+
+    .export-row {
+      display: flex;
+      gap: 11px;
+      margin: 13px 0 13px 0;
+    }
+
+    .export-row button {
+      padding: 9px 14px;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1em;
+      border: none;
+      letter-spacing: .19px;
+      box-shadow: 0 3px 12px var(--color2)66;
+      cursor: pointer;
+    }
+
+    .export-row button:hover {
+      background: var(--color2);
+    }
+
+    .dse-panel {
+      margin: 17px 0 10px 0;
+      padding: 13px;
+      border-radius: 13px;
+      background: var(--color2);
+      box-shadow: 0 1px 5px var(--color3);
+      border: 1.4px solid var(--color2);
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    .dse-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 7px;
+      min-width: 0;
+    }
+
+    .dse-item {
+      padding: 5px 13px;
+      border-radius: 18px;
+      background: var(--color3);
+      color: var(--primary);
+      font-weight: 700;
+      border: 1.1px solid var(--color2);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 1em;
+    }
+
+    .dse-delete {
+      background: var(--danger);
+      border: none;
+      color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      font-size: 11px;
+      margin-left: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .add-dse-row {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      margin-top: 3px;
+    }
+
+    .add-dse-row input {
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: .98em;
+      border: 1.1px solid var(--color2);
+      background: var(--color2);
+      outline: none;
+      color: var(--primary);
+    }
+
+    .add-dse-row button {
+      padding: 7px 18px;
+      border-radius: 11px;
+      background: var(--secondary);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .admin-note {
+      color: var(--color1);
+      font-size: 0.97em;
+      margin-top: 13px;
+      opacity: 0.7;
+    }
+
+    .password-modal {
+      position: fixed;
+      z-index: 888;
+      inset: 0;
+      background: rgba(61, 82, 160, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .password-box {
+      position: relative;
+      background: var(--color4);
+      border-radius: 15px;
+      box-shadow: 0 9px 52px var(--color2);
+      padding: 32px 18px 18px 18px;
+      min-width: 220px;
+      text-align: center;
+      color: var(--primary);
+      animation: popupScale .15s;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 9px;
+      right: 11px;
+      color: var(--danger);
+      background: none;
+      border: none;
+      font-size: 1.8em;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0 8px;
+      line-height: 0.97;
+      transition: color 0.15s;
+    }
+
+    .modal-close-btn:hover {
+      color: #9d2334;
+    }
+
+    @keyframes popupScale {
+      from {
+        opacity: 0;
+        transform: scale(0.91);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .password-box input {
+      margin: 8px auto 7px auto;
+      padding: 9px 13px;
+      border-radius: 8px;
+      border: 1.2px solid var(--color2);
+    }
+
+    .password-box button {
+      margin-top: 7px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 22px;
+      font-weight: 600;
+      font-size: 1.05em;
+      cursor: pointer;
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.98em;
+      margin-top: 7px;
+      min-height: 20px;
+    }
+
+    .success-modal {
+      position: fixed;
+      z-index: 999;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--color3);
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.13em;
+      border-radius: 13px;
+      padding: 28px 36px;
+      box-shadow: 0 8px 30px var(--color2);
+      border: 1.5px solid var(--color1);
+      display: none;
+      pointer-events: none;
+    }
+
+    @media (max-width:650px) {
+      .container {
+        border-radius: 0;
+        max-width: 99vw;
+      }
+
+      .form-wrap,
+      .searchbar,
+      .reports-list,
+      #adminPanel {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+
+      h1 {
+        font-size: 1.29em;
+      }
+
+      .section-title {
+        margin-left: 9px;
+      }
+
+      .nav-tabs {
+        gap: 7px;
+      }
+
+      .nav-tabs button {
+        font-size: 1em;
+        padding: 8px;
+      }
+
+      .calendar-anchor {
+        min-width: 195px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>KEM DSE Reports</h1>
+    <div class="nav-tabs">
+      <button class="active" id="reportsTab" onclick="switchTab('reports')">Reports</button>
+      <button id="adminTab" onclick="showAdminPrompt()">Admin Panel</button>
+      <button id="ipdTab" onclick="switchTab('ipd')">IPD (Indoor Patient)</button>
+    </div>
+    <!-- Reports Panel -->
+    <div id="reportsPanel">
+      <div class="form-wrap">
+        <form id="reportForm" autocomplete="off">
+          <label>Date:</label>
+          <div class="date-wrapper">
+            <input type="text" id="date" placeholder="Select date" readonly required
+              onclick="showCustomCalendar(this,'calendarWidget')" onfocus="showCustomCalendar(this,'calendarWidget')"
+              autocomplete="off" />
+            <div id="calendarWidget" class="calendar-anchor"></div>
+          </div>
+          <label>Department:</label>
+          <input type="text" id="department" required maxlength="40" />
+          <label>Updates:</label>
+          <input type="text" id="updates" maxlength="60" />
+          <label>Report/Problem:</label>
+          <textarea id="problem" required rows="2" style="resize:vertical;min-height:46px;max-width:100%;"></textarea>
+          <label>Status:</label>
+          <select id="status">
+            <option value="reported">Reported</option>
+            <option value="pending">Pending</option>
+            <option value="solved">Solved</option>
+          </select>
+          <label>Reported To:</label>
+          <input type="text" id="reportedto" maxlength="40" />
+          <label>DSE:</label>
+          <select id="dseDropdown"></select>
+          <label>Resolved:</label>
+          <select id="resolved">
+            <option value="pending">Pending</option>
+            <option value="solved">Solved</option>
+          </select>
+          <button type="submit" class="submit-btn">Add Report</button>
+        </form>
+      </div>
+      <div class="searchbar"><input type="text" id="searchInput" placeholder="Search reports..."
+          onkeyup="searchCards('reports')" /></div>
+      <div class="filter-buttons">
+        <button type="button" id="filterTodayBtn" class="filter-btn">Today's Reports</button>
+        <button type="button" id="showAllBtn" class="filter-btn active">All</button>
+      </div>
+      <div class="section-title">Today's Reports</div>
+      <div class="reports-list" id="todaysReportsList"></div>
+      <div class="section-title">All Reports</div>
+      <div class="reports-list" id="reportsList"></div>
+    </div>
+    <!-- Admin Panel -->
+    <div id="adminPanel" style="display:none;">
+      <div class="section-title" style="margin-top:12px;">All Reports (Admin Controls)</div>
+      <div class="reports-list admin-reports-list" id="adminReportsList"></div>
+      <div class="section-title" style="margin-top:12px;">All IPD Records (Admin Controls)</div>
+      <div class="reports-list admin-reports-list" id="adminIpdList"></div>
+      <div class="export-row">
+        <button onclick="exportReportsToExcel()">Export Reports to Excel</button>
+        <button onclick="exportIpdToExcel()">Export IPD to Excel</button>
+      </div>
+      <div class="dse-panel">
+        <div style="color:#277bce;margin:0 0 11px 0;font-weight:bold;">Manage DSE List</div>
+        <div class="dse-list" id="dseList"></div>
+        <div class="add-dse-row">
+          <input type="text" id="addDseInput" placeholder="DSE name..." />
+          <button type="button" onclick="addDse()">Add DSE</button>
+        </div>
+      </div>
+      <div class="admin-note"><b>Note:</b> DSE list updates reflect instantly in both forms.</div>
+    </div>
+    <!-- IPD Panel -->
+    <div id="ipdPanel" style="display:none;">
+      <div class="form-wrap">
+        <form id="ipdForm" autocomplete="off">
+          <label>Date:</label>
+          <div class="date-wrapper">
+            <input type="text" id="ipd_date" placeholder="Select date" readonly required
+              onclick="showCustomCalendar(this,'calendarWidgetIpd')"
+              onfocus="showCustomCalendar(this,'calendarWidgetIpd')" autocomplete="off" />
+            <div id="calendarWidgetIpd" class="calendar-anchor"></div>
+          </div>
+          <label>Department:</label>
+          <input type="text" id="ipd_department" required maxlength="40" />
+          <label>Radiology Orders:</label>
+          <input type="number" id="ipd_radio_orders" min="0" value="0" placeholder="Number of Radiology Orders" />
+          <label>Lab Orders:</label>
+          <input type="number" id="ipd_lab_orders" min="0" value="0" placeholder="Number of Lab Orders" />
+          <label>Report/Problem:</label>
+          <textarea id="ipd_problem" required rows="2"
+            style="resize:vertical;min-height:46px;max-width:100%;"></textarea>
+          <label>Order/Investigation:</label>
+          <input type="text" id="ipd_order_inv" maxlength="60" placeholder="e.g., CBC, X-Ray, CT, Orders..." />
+          <label>Status:</label>
+          <select id="ipd_status">
+            <option value="reported">Reported</option>
+            <option value="pending">Pending</option>
+            <option value="solved">Solved</option>
+          </select>
+          <label>Reported To:</label>
+          <input type="text" id="ipd_reportedto" maxlength="40" />
+          <label>DSE:</label>
+          <select id="ipd_dseDropdown"></select>
+          <label>Resolved:</label>
+          <select id="ipd_resolved">
+            <option value="pending">Pending</option>
+            <option value="solved">Solved</option>
+          </select>
+          <button type="submit" class="submit-btn">
+            Add IPD Record</button>
+        </form>
+      </div>
+      <div class="searchbar">
+        <input type="text" id="ipdSearchInput" placeholder="Search IPD..." onkeyup="searchCards('ipd')" />
+      </div>
+      <div class="filter-buttons">
+        <button type="button" id="ipdFilterTodayBtn" class="filter-btn">Today's IPD</button>
+        <button type="button" id="ipdShowAllBtn" class="filter-btn active">All IPD</button>
+      </div>
+      <div class="section-title">Today's IPD Reports</div>
+      <div class="reports-list" id="ipdTodayList"></div>
+      <div class="section-title">All IPD Reports</div>
+      <div class="reports-list" id="ipdList"></div>
+    </div>
+  </div>
+  <!-- Password Modal -->
+  <div id="passwordModal" class="password-modal" style="display:none;">
+    <div class="password-box">
+      <button class="modal-close-btn" onclick="closePasswordModal()" title="Close">&times;</button>
+      <div style="font-weight:700;font-size:1.08em;letter-spacing:1px;">Admin Password</div>
+      <input type="password" id="adminPassword" placeholder="Enter password" />
+      <div><button onclick="checkPassword()">Login</button></div>
+      <div id="errMsg" class="error-msg" style="display:none;">Incorrect password!</div>
+    </div>
+  </div>
+  <div id="successModal" class="success-modal">Admin login successfully</div>
+
+  
+  <script>
+    let dseNames = ["Ganesh Pise", "Rajkamai Chauhan", "Danish Khan"];
+    let reports = [];
+    let ipdRecords = [];
+    const dseDropdown = document.getElementById('dseDropdown');
+    const ipdDseDropdown = document.getElementById('ipd_dseDropdown');
+    const dseList = document.getElementById('dseList');
+    function getTodayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+    function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+    function updateDseDropdowns() { const opts = dseNames.map(n => `<option value="${n}">${n}</option>`).join(''); dseDropdown.innerHTML = opts; ipdDseDropdown.innerHTML = opts; }
+    function renderDseList() { dseList.innerHTML = dseNames.map((n, i) => `<span class="dse-item">${n}<button class="dse-delete" onclick="removeDse(${i})">&times;</button></span>`).join(''); }
+    function addDse() { const inp = document.getElementById('addDseInput'); const v = inp.value.trim(); if (v && !dseNames.includes(v)) { dseNames.push(v); updateDseDropdowns(); renderDseList(); } inp.value = ''; }
+    function removeDse(i) { dseNames.splice(i, 1); updateDseDropdowns(); renderDseList(); }
+    updateDseDropdowns(); renderDseList();
+
+    document.getElementById('reportForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const r = { date: document.getElementById('date').value, department: document.getElementById('department').value, updates: document.getElementById('updates').value, problem: document.getElementById('problem').value, status: document.getElementById('status').value, reportedto: document.getElementById('reportedto').value, dse: document.getElementById('dseDropdown').value, resolved: document.getElementById('resolved').value };
+      reports.unshift(r); renderReportsUI(); renderAdminUI(); e.target.reset();
+    });
+    document.getElementById('ipdForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const r = { date: document.getElementById('ipd_date').value, department: document.getElementById('ipd_department').value, ipd_radio_orders: Number(document.getElementById('ipd_radio_orders').value || 0), ipd_lab_orders: Number(document.getElementById('ipd_lab_orders').value || 0), problem: document.getElementById('ipd_problem').value, order_inv: document.getElementById('ipd_order_inv').value, status: document.getElementById('ipd_status').value, reportedto: document.getElementById('ipd_reportedto').value, dse: document.getElementById('ipd_dseDropdown').value, resolved: document.getElementById('ipd_resolved').value };
+      ipdRecords.unshift(r); renderIpdUI(); renderAdminUI(); e.target.reset();
+    });
+    function reportCardHtml(r, idx, isAdmin = false, isIpd = false) {
+      const idPrefix = isAdmin ? (isIpd ? 'ipd-admin-' : 'admin-') : (isIpd ? 'ipd-' : '');
+      const extra = isIpd ? `
+    <div class="card-section"><span class="card-label">Radiology Orders</span><span class="card-content">${r.ipd_radio_orders ?? 0}</span></div>
+    <div class="card-section"><span class="card-label">Lab Orders</span><span class="card-content">${r.ipd_lab_orders ?? 0}</span></div>
+    <div class="card-section"><span class="card-label">Order/Investigation</span><span class="card-content">${r.order_inv || ''}</span></div>
+  ` : `<div class="card-section"><span class="card-label">Updates</span><span class="card-content">${r.updates || ''}</span></div>`;
+      return `<div class="report-card" id="card-${idPrefix}${idx}">
+    <div class="card-section"><span class="card-label">Date</span><span class="card-content">${r.date}</span></div>
+    <div class="card-section"><span class="card-label">Department</span><span class="card-content">${r.department}</span></div>
+    ${extra}
+    <div class="card-section"><span class="card-label">Report/Problem</span><span class="card-content">${r.problem}</span></div>
+    <div class="card-section"><span class="card-label">Status</span>${isAdmin ? `<select class="badge-select" onchange="${isIpd ? 'adminChangeIpdStatus' : 'adminChangeStatus'}(${idx},this.value)">
+        <option value="reported" ${r.status === 'reported' ? 'selected' : ''}>Reported</option>
+        <option value="pending" ${r.status === 'pending' ? 'selected' : ''}>Pending</option>
+        <option value="solved" ${r.status === 'solved' ? 'selected' : ''}>Solved</option>
+      </select>` : `<span class="badge ${r.status}">${capitalize(r.status)}</span>`
+        }</div>
+    <div class="card-section"><span class="card-label">Resolved</span>${isAdmin ? `<select class="badge-select" onchange="${isIpd ? 'adminChangeIpdResolved' : 'adminChangeResolved'}(${idx},this.value)">
+        <option value="pending" ${r.resolved === 'pending' ? 'selected' : ''}>Pending</option>
+        <option value="solved" ${r.resolved === 'solved' ? 'selected' : ''}>Solved</option>
+      </select>` : `<span class="badge ${r.resolved}">${capitalize(r.resolved)}</span>`
+        }</div>
+    <div class="card-section"><span class="card-label">Reported To</span><span class="card-content">${r.reportedto}</span></div>
+    <div class="card-section"><span class="card-label">DSE</span><span class="card-content">${r.dse}</span></div>
+    <div class="card-actions"><button class="delete-btn" onclick="${isAdmin ? (isIpd ? 'adminDeleteIpd' : 'adminDeleteReport') : (isIpd ? 'deleteIpd' : 'deleteReport')}(${idx})">&times;</button></div>
+  </div>`;
+    }
+    function fadeOutCard(id, cb) { const el = document.getElementById(id); if (!el) { cb(); return; } el.classList.add('fadeout'); setTimeout(cb, 480); }
+    function renderReportsUI() {
+      const t = getTodayStr();
+      document.getElementById('reportsList').innerHTML = reports.map((r, i) => reportCardHtml(r, i, false, false)).join('');
+      document.getElementById('todaysReportsList').innerHTML = reports.map((r, i) => r.date === t ? reportCardHtml(r, i, false, false) : '').join('');
+    }
+    function renderIpdUI() {
+      const t = getTodayStr();
+      document.getElementById('ipdList').innerHTML = ipdRecords.map((r, i) => reportCardHtml(r, i, false, true)).join('');
+      document.getElementById('ipdTodayList').innerHTML = ipdRecords.map((r, i) => r.date === t ? reportCardHtml(r, i, false, true) : '').join('');
+    }
+    function renderAdminUI() {
+      document.getElementById('adminReportsList').innerHTML = reports.map((r, i) => reportCardHtml(r, i, true, false)).join('');
+      document.getElementById('adminIpdList').innerHTML = ipdRecords.map((r, i) => reportCardHtml(r, i, true, true)).join('');
+    }
+    function deleteReport(i) { fadeOutCard(`card-${i}`, () => { reports.splice(i, 1); renderReportsUI(); renderAdminUI(); }); }
+    function adminDeleteReport(i) { fadeOutCard(`card-admin-${i}`, () => { reports.splice(i, 1); renderReportsUI(); renderAdminUI(); }); }
+    function adminChangeStatus(i, v) { reports[i].status = v; renderReportsUI(); renderAdminUI(); }
+    function adminChangeResolved(i, v) { reports[i].resolved = v; renderReportsUI(); renderAdminUI(); }
+    function deleteIpd(i) { fadeOutCard(`card-ipd-${i}`, () => { ipdRecords.splice(i, 1); renderIpdUI(); renderAdminUI(); }); }
+    function adminDeleteIpd(i) { fadeOutCard(`card-ipd-admin-${i}`, () => { ipdRecords.splice(i, 1); renderIpdUI(); renderAdminUI(); }); }
+    function adminChangeIpdStatus(i, v) { ipdRecords[i].status = v; renderIpdUI(); renderAdminUI(); }
+    function adminChangeIpdResolved(i, v) { ipdRecords[i].resolved = v; renderIpdUI(); renderAdminUI(); }
+    document.getElementById('filterTodayBtn').onclick = () => { document.getElementById('todaysReportsList').style.display = ''; document.getElementById('reportsList').style.display = 'none'; setActive('filterTodayBtn', 'showAllBtn'); };
+    document.getElementById('showAllBtn').onclick = () => { document.getElementById('todaysReportsList').style.display = ''; document.getElementById('reportsList').style.display = ''; setActive('showAllBtn', 'filterTodayBtn'); };
+    document.getElementById('ipdFilterTodayBtn').onclick = () => { document.getElementById('ipdTodayList').style.display = ''; document.getElementById('ipdList').style.display = 'none'; setActive('ipdFilterTodayBtn', 'ipdShowAllBtn'); };
+    document.getElementById('ipdShowAllBtn').onclick = () => { document.getElementById('ipdTodayList').style.display = ''; document.getElementById('ipdList').style.display = ''; setActive('ipdShowAllBtn', 'ipdFilterTodayBtn'); };
+    function setActive(on, off) { document.getElementById(on).classList.add('active'); document.getElementById(off).classList.remove('active'); }
+    function searchCards(scope) {
+      const q = (scope === 'ipd' ? document.getElementById('ipdSearchInput') : document.getElementById('searchInput')).value.toLowerCase();
+      const lists = scope === 'ipd' ? ['ipdList', 'ipdTodayList'] : ['reportsList', 'todaysReportsList'];
+      for (const lid of lists) {
+        const cards = document.getElementById(lid).getElementsByClassName('report-card');
+        for (let c of cards) { c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none'; }
+      }
+    }
+    function switchTab(tab) {
+      document.getElementById('reportsPanel').style.display = tab === 'reports' ? 'block' : 'none';
+      document.getElementById('adminPanel').style.display = tab === 'admin' ? 'block' : 'none';
+      document.getElementById('ipdPanel').style.display = tab === 'ipd' ? 'block' : 'none';
+      document.getElementById('reportsTab').classList.toggle('active', tab === 'reports');
+      document.getElementById('adminTab').classList.toggle('active', tab === 'admin');
+      document.getElementById('ipdTab').classList.toggle('active', tab === 'ipd');
+    }
+    function showAdminPrompt() {
+      document.getElementById('passwordModal').style.display = 'flex';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('errMsg').style.display = 'none';
+    }
+    function closePasswordModal() {
+      document.getElementById('passwordModal').style.display = 'none';
+    }
+    function checkPassword() {
+      const val = document.getElementById('adminPassword').value;
+      if (val === "helloarbaz") {
+        switchTab('admin');
+        document.getElementById('passwordModal').style.display = 'none';
+        document.getElementById('errMsg').style.display = 'none';
+        showSuccessPopup();
+      } else {
+        document.getElementById('errMsg').style.display = 'block';
+      }
+    }
+    document.getElementById('adminPassword').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+    function showSuccessPopup() { const s = document.getElementById('successModal'); s.style.display = 'block'; setTimeout(() => s.style.display = 'none', 1450); }
+
+    /* Custom Calendar (multi-anchor) */
+    function showCustomCalendar(inputElem, anchorId) {
+      const anchor = document.getElementById(anchorId);
+      let today = new Date();
+      let selected = inputElem.value ? new Date(inputElem.value) : today;
+      let cm = selected.getMonth(), cy = selected.getFullYear();
+      function render() {
+        anchor.innerHTML = ''; anchor.style.display = 'block';
+        const box = document.createElement('div'); box.className = 'calendar-box';
+        const head = document.createElement('div'); head.className = 'calendar-header';
+        const prev = document.createElement('button'); prev.className = 'calendar-btn'; prev.textContent = '‹'; prev.onclick = e => { e.stopPropagation(); change(-1); };
+        const name = new Date(cy, cm).toLocaleString('default', { month: 'long' }); const ttl = document.createElement('div'); ttl.style.fontWeight = '700'; ttl.textContent = `${name} ${cy}`;
+        const next = document.createElement('button'); next.className = 'calendar-btn'; next.textContent = '›'; next.onclick = e => { e.stopPropagation(); change(1); };
+        head.append(prev, ttl, next); box.appendChild(head);
+
+        const days = document.createElement('div'); days.className = 'calendar-days';
+        ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach(d => { const l = document.createElement('div'); l.className = 'calendar-day-label'; l.textContent = d; days.appendChild(l); });
+        const first = new Date(cy, cm, 1).getDay(); const total = new Date(cy, cm + 1, 0).getDate();
+        for (let i = 0; i < first; i++) days.appendChild(document.createElement('div'));
+        for (let d = 1; d <= total; d++) {
+          const btn = document.createElement('button'); btn.className = 'calendar-day'; btn.textContent = d;
+          const dateVal = `${cy}-${String(cm + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          if (inputElem.value === dateVal) btn.classList.add('selected');
+          if ((new Date()).toISOString().split('T')[0] === dateVal) btn.classList.add('calendar-today');
+          btn.onclick = () => { inputElem.value = dateVal; inputElem.dispatchEvent(new Event('change')); close(); };
+          days.appendChild(btn);
+        }
+        box.appendChild(days); anchor.appendChild(box);
+
+        setTimeout(() => { document.addEventListener('mousedown', outside); window.addEventListener('resize', close); }, 30);
+        function outside(e) { if (!anchor.contains(e.target) && e.target !== inputElem) close(); }
+        function close() { anchor.style.display = 'none'; document.removeEventListener('mousedown', outside); window.removeEventListener('resize', close); }
+      }
+      function change(dir) { cm += dir; if (cm < 0) { cm = 11; cy--; } if (cm > 11) { cm = 0; cy++; } render(); }
+      render();
+    }
+
+    /* Excel Export */
+    function convertToCSV(arr, isIpd) {
+      const headers = ["Date", "Department", ...(isIpd ? ["Radiology Orders", "Lab Orders", "Order/Investigation"] : ["Updates"]), "Report/Problem", "Status", "Resolved", "Reported To", "DSE"];
+      let csv = headers.join(",") + "\n";
+      arr.forEach(o => {
+        const row = [
+          o.date || "", o.department || "",
+          ...(isIpd ? [o.ipd_radio_orders ?? 0, o.ipd_lab_orders ?? 0, o.order_inv || ""] : [o.updates || ""]),
+          o.problem || "", o.status || "", o.resolved || "", o.reportedto || "", o.dse || ""
+        ].map(v => {
+          const s = String(v);
+          return (s.includes(",") || s.includes('"') || s.includes("\n")) ? `"${s.replace(/"/g, '""')}"` : s;
+        });
+        csv += row.join(",") + "\n";
+      });
+      return csv;
+    }
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" }); const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+    function exportReportsToExcel() {
+      if (!reports.length) { alert("No reports to export!"); return; }
+      downloadCSV(convertToCSV(reports, false), "kem_dse_reports.csv");
+    }
+    function exportIpdToExcel() {
+      if (!ipdRecords.length) { alert("No IPD records to export!"); return; }
+      downloadCSV(convertToCSV(ipdRecords, true), "kem_ipd_reports.csv");
+    }
+
+    /* Initial Render */
+    renderReportsUI(); renderIpdUI(); renderAdminUI();
+  </script>
+  <script type="module">
+// 1) Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, getDocs, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+// 2) Your Firebase config (as provided)
+const firebaseConfig = {
+  apiKey: "AIzaSyBHW6CUDWmJZ67pWFKiUO2R4kVoBXQ-vYs",
+  authDomain: "dsemangement.firebaseapp.com",
+  projectId: "dsemangement",
+  storageBucket: "dsemangement.firebasestorage.app",
+  messagingSenderId: "108248999427",
+  appId: "1:108248999427:web:b0cd9aa231dee054e0d036",
+  measurementId: "G-6W385V5DW6"
+};
+
+// 3) Initialize
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// 4) Collection refs
+const colReports = collection(db, "reports");
+const colIpd     = collection(db, "ipd");
+
+// 5) DOM refs (match your IDs)
+const reportForm = document.getElementById("reportForm");
+const reportsList = document.getElementById("reportsList");
+const adminReportsList = document.getElementById("adminReportsList"); // if present
+// If you have IPD form and lists, set the IDs accordingly:
+const ipdForm = document.getElementById("ipdForm");
+const ipdAllList = document.getElementById("ipdList") || document.getElementById("ipd-all-list");
+const ipdTodayList = document.getElementById("ipdTodayList") || document.getElementById("ipd-today-list");
+
+// 6) Helpers
+const todayStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+};
+const escapeHTML = (s="") => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// 7) Renderers
+function renderReportCard(docSnap, admin = false) {
+  const d = docSnap.data();
+  const id = docSnap.id;
+  const content = `
+    <div class="report-card" id="rep-${id}">
+      <div class="card-section"><strong>Date:</strong> <span class="card-content">${escapeHTML(d.date||"")}</span></div>
+      <div class="card-section"><strong>Department:</strong> <span class="card-content">${escapeHTML(d.department||"")}</span></div>
+      ${d.updates ? `<div class="card-section"><strong>Updates:</strong> <span class="card-content">${escapeHTML(d.updates)}</span></div>` : ""}
+      <div class="card-section"><strong>Problem:</strong> <span class="card-content">${escapeHTML(d.problem||"")}</span></div>
+      <div class="card-section"><strong>Status:</strong> <span class="card-content">${escapeHTML(d.status||"")}</span></div>
+      <div class="card-section"><strong>Resolved:</strong> <span class="card-content">${escapeHTML(d.resolved||"")}</span></div>
+      ${d.reportedto ? `<div class="card-section"><strong>Reported To:</strong> <span class="card-content">${escapeHTML(d.reportedto)}</span></div>` : ""}
+      ${d.dse ? `<div class="card-section"><strong>DSE:</strong> <span class="card-content">${escapeHTML(d.dse)}</span></div>` : ""}
+      ${admin ? `
+        <div class="card-section" style="gap:8px; flex-wrap:wrap;">
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#277bce;color:#fff;font-weight:700;cursor:pointer"
+            onclick="window.__updateReportStatus('${id}','reported')">Reported</button>
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#f7c948;color:#663c00;font-weight:700;cursor:pointer"
+            onclick="window.__updateReportStatus('${id}','pending')">Pending</button>
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#69db7c;color:#054a29;font-weight:700;cursor:pointer"
+            onclick="window.__updateReportStatus('${id}','solved')">Solved</button>
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#ff6b6b;color:#fff;font-weight:700;cursor:pointer"
+            onclick="window.__deleteReport('${id}')">Delete</button>
+        </div>` : ``}
+    </div>
+  `;
+  return content;
+}
+
+function renderIpdCard(docSnap, admin=false) {
+  const d = docSnap.data();
+  const id = docSnap.id;
+  const content = `
+    <div class="report-card" id="ipd-${id}">
+      <div class="card-section"><strong>Date:</strong> <span class="card-content">${escapeHTML(d.date||"")}</span></div>
+      <div class="card-section"><strong>Department:</strong> <span class="card-content">${escapeHTML(d.department||"")}</span></div>
+      <div class="card-section"><strong>Radiology Orders:</strong> <span class="card-content">${Number(d.ipd_radio_orders||0)}</span></div>
+      <div class="card-section"><strong>Lab Orders:</strong> <span class="card-content">${Number(d.ipd_lab_orders||0)}</span></div>
+      ${d.order_inv ? `<div class="card-section"><strong>Order/Investigation:</strong> <span class="card-content">${escapeHTML(d.order_inv)}</span></div>` : ""}
+      <div class="card-section"><strong>Problem:</strong> <span class="card-content">${escapeHTML(d.problem||"")}</span></div>
+      <div class="card-section"><strong>Status:</strong> <span class="card-content">${escapeHTML(d.status||"")}</span></div>
+      <div class="card-section"><strong>Resolved:</strong> <span class="card-content">${escapeHTML(d.resolved||"")}</span></div>
+      ${d.reportedto ? `<div class="card-section"><strong>Reported To:</strong> <span class="card-content">${escapeHTML(d.reportedto)}</span></div>` : ""}
+      ${d.dse ? `<div class="card-section"><strong>DSE:</strong> <span class="card-content">${escapeHTML(d.dse)}</span></div>` : ""}
+      ${admin ? `
+        <div class="card-section" style="gap:8px; flex-wrap:wrap;">
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#277bce;color:#fff;font-weight:700;cursor:pointer"
+            onclick="window.__updateIpdStatus('${id}','reported')">Reported</button>
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#f7c948;color:#663c00;font-weight:700;cursor:pointer"
+            onclick="window.__updateIpdStatus('${id}','pending')">Pending</button>
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#69db7c;color:#054a29;font-weight:700;cursor:pointer"
+            onclick="window.__updateIpdStatus('${id}','solved')">Solved</button>
+          <button style="padding:8px 12px;border:none;border-radius:10px;background:#ff6b6b;color:#fff;font-weight:700;cursor:pointer"
+            onclick="window.__deleteIpd('${id}')">Delete</button>
+        </div>` : ``}
+    </div>
+  `;
+  return content;
+}
+
+// 8) Create / Add
+if (reportForm) {
+  reportForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = {
+      date: (document.getElementById("date")?.value || ""),
+      department: (document.getElementById("department")?.value || ""),
+      updates: (document.getElementById("updates")?.value || ""),
+      problem: (document.getElementById("problem")?.value || ""),
+      status: (document.getElementById("status")?.value || "reported"),
+      reportedto: (document.getElementById("reportedto")?.value || ""),
+      dse: (document.getElementById("dse")?.value || ""),
+      resolved: (document.getElementById("resolved")?.value || "pending"),
+      createdAt: serverTimestamp()
+    };
+    await addDoc(colReports, data);
+    alert("Report added!");
+    e.target.reset();
+  });
+}
+
+if (ipdForm) {
+  ipdForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = {
+      date: (document.getElementById("ipd_date")?.value || document.getElementById("ipd-date")?.value || ""),
+      department: (document.getElementById("ipd_department")?.value || document.getElementById("ipd-dept")?.value || ""),
+      ipd_radio_orders: Number(document.getElementById("ipd_radio_orders")?.value || document.getElementById("ipd-radio")?.value || 0),
+      ipd_lab_orders: Number(document.getElementById("ipd_lab_orders")?.value || document.getElementById("ipd-lab")?.value || 0),
+      problem: (document.getElementById("ipd_problem")?.value || document.getElementById("ipd-problem")?.value || ""),
+      order_inv: (document.getElementById("ipd_order_inv")?.value || document.getElementById("ipd-order")?.value || ""),
+      status: (document.getElementById("ipd_status")?.value || "reported"),
+      reportedto: (document.getElementById("ipd_reportedto")?.value || document.getElementById("ipd-report")?.value || ""),
+      dse: (document.getElementById("ipd_dseDropdown")?.value || document.getElementById("ipd-dse")?.value || ""),
+      resolved: (document.getElementById("ipd_resolved")?.value || "pending"),
+      createdAt: serverTimestamp()
+    };
+    await addDoc(colIpd, data);
+    alert("IPD record added!");
+    e.target.reset();
+  });
+}
+
+// 9) Realtime listeners
+if (reportsList) {
+  onSnapshot(colReports, (snap) => {
+    reportsList.innerHTML = "";
+    snap.forEach(docSnap => {
+      reportsList.insertAdjacentHTML("beforeend", renderReportCard(docSnap, false));
+    });
+  });
+}
+
+if (adminReportsList) {
+  onSnapshot(colReports, (snap) => {
+    adminReportsList.innerHTML = "";
+    snap.forEach(docSnap => {
+      adminReportsList.insertAdjacentHTML("beforeend", renderReportCard(docSnap, true));
+    });
+  });
+}
+
+if (ipdAllList) {
+  onSnapshot(colIpd, (snap) => {
+    ipdAllList.innerHTML = "";
+    const t = todayStr();
+    let todayHtml = "";
+    let allHtml = "";
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      const card = renderIpdCard(docSnap, !!document.getElementById("adminIpdList"));
+      allHtml += card;
+      if (d.date === t) todayHtml += card;
+    });
+    ipdAllList.innerHTML = allHtml;
+    if (ipdTodayList) ipdTodayList.innerHTML = todayHtml || "<div>No IPD for today</div>";
+  });
+}
+
+// 10) Update/Delete (admin buttons)
+window.__updateReportStatus = async (id, status) => {
+  await updateDoc(doc(db, "reports", id), { status });
+};
+window.__deleteReport = async (id) => {
+  if (confirm("Delete this report?")) await deleteDoc(doc(db, "reports", id));
+};
+window.__updateIpdStatus = async (id, status) => {
+  await updateDoc(doc(db, "ipd", id), { status });
+};
+window.__deleteIpd = async (id) => {
+  if (confirm("Delete this IPD record?")) await deleteDoc(doc(db, "ipd", id));
+};
+
+// 11) Simple tab switcher if needed
+window.switchTab = (tabId) => {
+  ["reportsPanel", "adminPanel", "ipdPanel"].forEach(id => {
+    const sec = document.getElementById(id);
+    // tabids: reportsTab, adminTab, ipdTab
+    const btn = document.getElementById(id.replace("Panel", "Tab"));
+    if (sec) sec.style.display = id.toLowerCase().startsWith(tabId) ? "block":"none";
+    if (btn) btn.classList.toggle("active", id.toLowerCase().startsWith(tabId));
+  });
+};
+
+
+</script>
+
+</body>
+
+</html>
